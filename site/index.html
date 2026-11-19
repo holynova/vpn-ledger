@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VPN 流量账本 · Windows 下载</title>
+  <meta name="description" content="在 Windows 上按应用查看 VPN 流量、整机收发用量和未识别连接线索，账本保存在本机。">
+  <link rel="canonical" href="https://vpn-ledger.xiaosang.cc/">
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:title" content="VPN 流量账本">
+  <meta property="og:image" content="https://vpn-ledger.xiaosang.cc/dashboard.png">
+  <meta property="og:description" content="哪些软件正在用 VPN？按应用查看用量、连接线索与本机历史。">
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/preview.js"></script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="e01c9f78-4607-4e60-b01c-77c8190b12b4"></script>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a class="brand" href="/"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>VPN 流量账本</a>
+  <nav aria-label="项目链接"><a href="https://xiaosang.cc/">作品集</a><a href="https://github.com/holynova/vpn-ledger">GitHub ↗</a></nav>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="intro">
+      <p class="platform">Windows x64 <span>／</span> v{{version}}</p>
+      <h1>哪些软件<br>在用 <em>VPN</em>？</h1>
+      <p class="lead">把今天的流量摊开看。色块越大，应用用量越高；点开未识别应用，还能查看目标、协议和最近的观测时间。</p>
+      <a class="download" href="https://github.com/holynova/vpn-ledger/releases/download/v{{version}}/VpnLedger.exe"><span aria-hidden="true">↓</span> 下载 Windows 版</a>
+      <a class="release" href="https://github.com/holynova/vpn-ledger/releases/tag/v{{version}}">版本说明 ↗</a>
+      <p class="requirement">适用 Windows 10（2004 起）及 Windows 11，双击 EXE 即可运行。</p>
+    </div>
+    <figure>
+      <div class="screen"><div class="captionbar"><span class="dot"></span>VPN 流量账本</div><a id="full" href="/dashboard.png" aria-label="打开当前预览原图"><img id="shot" src="/dashboard.png" alt="浅色用量分布：应用流量矩形图与底部连接详情" width="1848" height="1160"></a></div>
+      <figcaption><span>桌面实拍 · 示例数据</span>
+        <div class="switch" aria-label="预览界面"><button type="button" data-shot="dashboard" aria-pressed="true">浅色</button><button type="button" data-shot="dashboard-dark" aria-pressed="false">深色</button><button type="button" data-shot="history" aria-pressed="false">历史</button></div>
+      </figcaption>
+    </figure>
+  </section>
+  <section class="notes" aria-label="采集方式">
+    <article><h2>只看 VPN</h2><p>默认连接本机 Clash Verge / Mihomo，按代理出口统计。命中直连规则的连接会被跳过。</p></article>
+    <article><h2>切换全局</h2><p>查看整机物理网卡的实时收发量，包括绕过代理的流量。应用用量由 Windows 稍后更新。</p></article>
+    <article><h2>回看历史</h2><p>两种模式分别保存最近 30 个有记录日期的账本。关掉窗口后，仍可在系统托盘继续记录。</p></article>
+  </section>
+</main>
+</body></html>

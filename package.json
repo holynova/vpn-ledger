@@ -1,0 +1,13 @@
+{
+  "name": "vpn-ledger-site",
+  "version": "1.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node site/build.mjs",
+    "preview": "npm run build && wrangler dev --local",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.128.0"
+  }
+}
