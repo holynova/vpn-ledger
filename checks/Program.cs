@@ -35,6 +35,13 @@ class Checks
         ledger.Break();
         ledger.Sample(start.AddSeconds(31), new() { F("a",900,950) });
         Check(day.Sum.Total == 63, "gap and resume exclude unseen bytes");
+        var manyApps = new Day();
+        foreach (var (key,n) in new[] { ("a",80),("b",50),("c",30),("d",20),(Ledger.UnknownApp,1) })
+            manyApps.Apps[key] = new(0,n);
+        var tiles = MainWindow.MapItems(manyApps);
+        Check(tiles.Count == 4 && tiles.Any(t => t.Key == Ledger.UnknownApp) && tiles.Single(t => t.Key == null).Usage.Total == 50 &&
+              tiles.Sum(t => t.Usage.Total) == manyApps.Sum.Total, "treemap groups small apps and preserves unknown bytes");
+        Check(MainWindow.MapItems(new Day()).Count == 0,"empty map");
         var clue = new Clue("127.0.0.1 · 50","example.test · 443","TCP / HTTPS","Domain","no unique owner");
         ledger.Sample(start.AddSeconds(32),new() { F("unknown",9,18,app:Ledger.UnknownApp,offset:32) with { Clue = clue } });
         Check(day.Evidence["unknown"].Usage == new Bytes(9,18), "unknown endpoint and observed delta");

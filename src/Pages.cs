@@ -112,7 +112,7 @@ public partial class MainWindow
     });
     private void AppClick(object sender,RoutedEventArgs e)
     {
-        if (sender is Button { DataContext: RankingRow row }) AppPage(ledger,Today,row.Key);
+        if (sender is Button { DataContext: RankingRow row }) { selection = row.Key; AppPage(ledger,Today,row.Key); }
     }
     private void AppPage(Ledger book,string date,string key) => OpenPage(key == Ledger.UnknownApp ? "未识别应用 · 连接线索" : "应用详情",() =>
     {

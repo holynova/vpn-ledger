@@ -49,6 +49,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Width = Math.Min(Width,SystemParameters.WorkArea.Width);
+        Height = Math.Min(Height,SystemParameters.WorkArea.Height);
         List.ItemsSource = ranking;
         vpnLedger = LoadLedger(vpnStore);
         globalLedger = LoadLedger(globalStore);
@@ -160,15 +162,12 @@ public partial class MainWindow : Window
         string[] value = Fmt.Size(sum.Total).Split(' ');
         Total.Text = value[0]; Unit.Text = value[1]; Up.Text = Fmt.Size(sum.Up); Down.Text = Fmt.Size(sum.Down);
         UsageLabel.Text = global ? "今日全局用量" : "今日 VPN 用量";
-        VpnMode.Background = global ? Brushes.Transparent : Selected;
-        GlobalMode.Background = global ? Selected : Brushes.Transparent;
         Status.Text = paused ? "已暂停" : connected ? "记录中" : lastError == null ? "正在连接" : global ? "等待网络" : "等待内核";
         StatusDot.Fill = (Brush)Resources[connected && !paused ? "Accent" : "Muted"];
         string? message = readOnly.Contains(global ? globalStore : vpnStore) ? "历史文件无法读取。本次仅在内存记录，原文件已保留。" :
             storageError ?? (paused ? "已暂停采集，点击「继续」恢复记录。" : lastError);
         Notice.Visibility = message == null ? Visibility.Collapsed : Visibility.Visible;
         NoticeText.Text = message;
-        SortSpeed.Visibility = global ? Visibility.Collapsed : Visibility.Visible;
         bool useSpeed = !global && bySpeed;
         SortTotal.Background = useSpeed ? Brushes.Transparent : Selected;
         SortSpeed.Background = useSpeed ? Selected : Brushes.Transparent;
@@ -200,13 +199,12 @@ public partial class MainWindow : Window
         Empty.Visibility = rows.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
         EmptyText.Text = global ? "等待 Windows 应用记录" : "等待 VPN 流量";
         EmptyHint.Text = global ? "网卡速度实时更新，应用排行随后显示" : "产生代理流量后，应用会显示在这里";
-        Source.Text = global ? "Windows · 网卡" : "Mihomo · 本机";
-        Source.ToolTip = global ? "网卡总量包含直连和 VPN 出口；排行采用 Windows 应用用量。" : "仅记录已确认的代理连接";
+        RenderMap(day);
     }
     private void RangeClick(object sender, RoutedEventArgs e)
     {
         range.Background = Brushes.Transparent; range = (Button)sender; range.Background = Selected;
-        Chart.Minutes = int.Parse((string)range.Tag); TimeLabel.Text = $"−{Chart.Minutes} 分钟"; Chart.InvalidateVisual();
+        Chart.Minutes = int.Parse((string)range.Tag); Chart.InvalidateVisual();
     }
     private void SortClick(object sender, RoutedEventArgs e) { bySpeed = sender == SortSpeed; Render(); }
     private void PauseClick(object sender, RoutedEventArgs e)
@@ -221,7 +219,7 @@ public partial class MainWindow : Window
         Save();
         generation++;
         ledger.Break();
-        global = next;
+        global = next; selection = null;
         ledger.Break();
         connected = false; lastError = null; reportNotice = null;
         Chart.Samples = ledger.Points;

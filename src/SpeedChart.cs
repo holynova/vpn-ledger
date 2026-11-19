@@ -43,20 +43,25 @@ public sealed class SpeedChart : FrameworkElement
         double peak = 1;
         for (int i = 0; i < n; i++)
             if (coverage[i] > 0) { up[i] /= coverage[i]; down[i] /= coverage[i]; peak = Math.Max(peak, up[i] + down[i]); }
-        double floor = ActualHeight - 1, step = ActualWidth / n;
+        double floor = ActualHeight - 1;
         dc.DrawLine(new Pen((Brush)FindResource("Line"),1), new(0, floor), new(ActualWidth, floor));
-        var pale = (Brush)FindResource("ChartLight");
-        var coral = (Brush)FindResource("Accent");
-        for (int i = 0; i < n; i++)
+        var area = new StreamGeometry();
+        var line = new StreamGeometry();
+        using (var fill = area.Open())
+        using (var stroke = line.Open())
         {
-            double h = (up[i] + down[i]) / peak * (floor - 4);
-            if (h <= 0) continue;
-            h = Math.Max(2, h);
-            double x = i * step, w = Math.Max(1,step - 1.4);
-            dc.DrawRoundedRectangle(pale, null, new(x, floor - h, w, h), 1, 1);
-            double d = h * down[i] / (up[i] + down[i]);
-            if (d > 0) dc.DrawRoundedRectangle(coral, null, new(x, floor - d, w, d), 1, 1);
+            fill.BeginFigure(new(0,floor),true,true);
+            for (int i = 0; i < n; i++)
+            {
+                var point = new Point(i * ActualWidth / Math.Max(1,n-1),floor - (up[i]+down[i])/peak*(floor-2));
+                fill.LineTo(point,true,false);
+                if (i == 0) stroke.BeginFigure(point,false,false);
+                else stroke.LineTo(point,true,false);
+            }
+            fill.LineTo(new(ActualWidth,floor),true,false);
         }
+        dc.DrawGeometry((Brush)FindResource("ChartLight"),null,area);
+        dc.DrawGeometry(null,new Pen((Brush)FindResource("Accent"),1.6),line);
     }
     private void Hover(object sender, MouseEventArgs args)
     {
